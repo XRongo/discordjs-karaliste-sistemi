@@ -1,0 +1,17 @@
+{
+  "name": "v14-kara-liste-sistemi",
+  "version": "1.0.0",
+  "description": "Discord.js kara liste sistemi.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "XRongo",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^4.0.0",
+    "croxydb": "^0.0.12",
+    "discord.js": "^14.12.1",
+    "fs": "^0.0.1-security"
+  }
+}
