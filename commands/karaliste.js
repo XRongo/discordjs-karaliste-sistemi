@@ -1,5 +1,5 @@
 const Discord = require("discord.js")
-const config = require("../config")
+const ayarlar = require("../ayarlar")
 const xrongodb = require("croxydb")
 
 module.exports = {
@@ -46,19 +46,14 @@ module.exports = {
         }
     ],
 
-    /**
-     * @param {Discord.Client} client
-     * @param {Discord.ChatInputCommandInteraction} interaction
-     */
-
     async execute(client, interaction) {
         const embed = new Discord.EmbedBuilder()
-        .setColor("Red")
+            .setColor("Red")
 
-        if (!config.devIds.includes(interaction.user.id)) {
+        if (!ayarlar.karaliste_sistemi.devIds.includes(interaction.user.id)) {
             embed.setDescription(`Bu komutu sadece sahibim kullanabilir!`)
-            return interaction.reply({embeds: [embed]})
-        } 
+            return interaction.reply({ embeds: [embed] })
+        }
 
         if (interaction.options.getSubcommand() === "ekle") {
             const user = interaction.options.getUser("kullanıcı")
@@ -67,52 +62,52 @@ module.exports = {
 
             if (dbCheck) {
                 embed.setDescription(`Bu kullanıcı zaten kara listemde!`)
-                return interaction.reply({embeds: [embed], ephemeral: true})
+                return interaction.reply({ embeds: [embed], ephemeral: true })
             }
 
-            if (config.devIds.includes(user.id)) {
+            if (ayarlar.karaliste_sistemi.devIds.includes(user.id)) {
                 embed.setDescription(`Sahiplerimi kara listeme ekleyemem!`)
-                return interaction.reply({embeds: [embed], ephemeral: true})
+                return interaction.reply({ embeds: [embed], ephemeral: true })
             }
 
             xrongodb.set(`karaliste.${user.id}`, reason)
 
             embed.setDescription(`${user} adlı kullanıcıyı **${reason}** sebebiyle kara listeme ekledim!`)
 
-            interaction.reply({embeds: [embed]})
+            interaction.reply({ embeds: [embed] })
 
-            client.channels.cache.get(config.logChannel).send(`**${user.tag}** ${interaction.user.tag} tarafından **${reason}** sebebiyle **kara listeme** eklendi!`)
+            client.channels.cache.get(ayarlar.karaliste_sistemi.logChannel).send(`**${user.tag}** ${interaction.user.tag} tarafından **${reason}** sebebiyle **kara listeme** eklendi!`)
         } else if (interaction.options.getSubcommand() === "çıkar") {
             const user = interaction.options.getUser("kullanıcı")
             const dbCheck = xrongodb.fetch(`karaliste.${user.id}`)
 
             if (!dbCheck) {
                 embed.setDescription(`Bu kullanıcı zaten kara listemde değil!`)
-                return interaction.reply({embeds: [embed], ephemeral: true})
+                return interaction.reply({ embeds: [embed], ephemeral: true })
             }
 
             xrongodb.delete(`karaliste.${user.id}`)
 
             embed.setDescription(`${user} adlı kullanıcıyı kara listemden çıkardım!`)
 
-            interaction.reply({embeds: [embed]})
+            interaction.reply({ embeds: [embed] })
 
-            client.channels.cache.get(config.logChannel).send(`**${user.tag}** ${interaction.user.tag} tarafından  **kara listemden** çıkarıldı!`)
+            client.channels.cache.get(ayarlar.karaliste_sistemi.logChannel).send(`**${user.tag}** ${interaction.user.tag} tarafından  **kara listemden** çıkarıldı!`)
         } else if (interaction.options.getSubcommand() === "sıfırla") {
             const dbCheck = xrongodb.fetch(`karaliste`)
 
             if (!dbCheck) {
                 embed.setDescription(`Kara listem zaten boş!`)
-                return interaction.reply({embeds: [embed], ephemeral: true})
+                return interaction.reply({ embeds: [embed], ephemeral: true })
             }
 
             xrongodb.delete(`karaliste`)
 
             embed.setDescription(`Kara listemi sıfırladım!`)
 
-            interaction.reply({embeds: [embed]})
+            interaction.reply({ embeds: [embed] })
 
-            client.channels.cache.get(config.logChannel).send(`${interaction.user.tag} tarafından **kara listem** sıfırlandı!`)
+            client.channels.cache.get(ayarlar.karaliste_sistemi.logChannel).send(`${interaction.user.tag} tarafından **kara listem** sıfırlandı!`)
         }
     }
 }

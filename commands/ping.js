@@ -6,11 +6,6 @@ module.exports = {
     type: 1,
     options: [],
 
-    /**
-     * @param {Discord.Client} client
-     * @param {Discord.ChatInputCommandInteraction} interaction
-     */
-
     async execute(client, interaction) {
         interaction.reply(`Ölçülüyor...`).then(() => {
             setTimeout(() => {
